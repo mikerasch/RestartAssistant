@@ -2,7 +2,6 @@ package io.github.mikerasch.restart;
 
 public class Application {
     public static void main(String[] args) {
-        System.out.println("FOO");
         final ApplicationArguments applicationArguments = ApplicationArguments.from(args);
 
         final ProcessTerminator processTerminator = new ProcessTerminator(applicationArguments.pid());
