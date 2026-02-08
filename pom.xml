@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.mikerasch</groupId>
+    <artifactId>RestartAssistant</artifactId>
+    <version>1.0.0</version>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <appModule>RestartAssistant</appModule>
+        <appMainClass>io.github.mikerasch.restart.Application</appMainClass>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.panteleyev</groupId>
+                    <artifactId>jlink-maven-plugin</artifactId>
+
+                    <configuration>
+                        <output>${project.build.directory}/jlink</output>
+                        <modulePaths>
+                            <modulePath>${project.build.directory}/classes</modulePath>
+                        </modulePaths>
+                        <addModules>
+                            <addModule>${appModule}</addModule>
+                        </addModules>
+                        <noHeaderFiles>true</noHeaderFiles>
+                        <noManPages>true</noManPages>
+                        <stripDebug>true</stripDebug>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.panteleyev</groupId>
+                    <artifactId>jpackage-maven-plugin</artifactId>
+
+                    <configuration>
+                        <name>Restart Assistant</name>
+                        <appVersion>${project.version}</appVersion>
+                        <vendor>vendor.org</vendor>
+                        <module>${appModule}/${appMainClass}</module>
+                        <runtimeImage>${project.build.directory}/jlink</runtimeImage>
+                        <destination>${project.build.directory}/dist</destination>
+                        <removeDestination>true</removeDestination>
+                        <type>APP_IMAGE</type>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>io.github.mikerasch.restart.Application</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
